@@ -99,4 +99,32 @@ def validateRs(bik, rs):
     return result
 
 
-validateRs(bik, rs)
+def validateOgrn(ogrn):
+    result = False
+    if not ogrn:
+        # raise ValidationError('ОГРН не заполнен')
+        print('ОГРН не заполнен')
+    elif not ogrn.isdigit():
+        print('ОГРН может состоять только из цифры')
+        # raise ValidationError('ОГРН может состоять только из цифры')
+    elif not len(ogrn) in [13, 15]:
+        print('ОГРН может состоять только из 13 цифр или 15 цифр')
+        # raise ValidationError('ОГРН может состоять только из 13 или 15 цифр')
+    else:
+        if len(ogrn) == 13:
+            ogrn_org = int(ogrn[:12]) % 11
+            if ogrn_org == int(ogrn[12]):
+                result = True
+                print('Верно')
+            else:
+                print('ОГРН указан не верно')
+                # raise ValidationError('ОГРН указан не верно')
+        elif len(ogrn) == 15:
+            ogrn_ip = int(ogrn[:14]) % 13
+            if ogrn_ip == int(ogrn[14]):
+                result = True
+                print('Верно')
+            else:
+                print('ОГРН указан не верно')
+                # raise ValidationError('ОГРН указан не верно')
+    return result
