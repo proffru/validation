@@ -16,14 +16,13 @@ def validateBik(bik):
     return result
 
 
-def check_digits(inn, coefficients):
-    n = 0
-    for idx, i in enumerate(coefficients):
-        n += i * int(inn[idx])
-    return n % 11 % 10
-
-
 def validateInn(inn):
+    def check_digits(inn, coefficients):
+        n = 0
+        for idx, i in enumerate(coefficients):
+            n += i * int(inn[idx])
+        return n % 11 % 10
+
     result = False
     if not inn:
         # raise ValidationError('ИНН не заполнен')
@@ -40,9 +39,9 @@ def validateInn(inn):
             if inn10 == int(inn[9]):
                 result = True
         if len(inn) == 12:
-            n11 = check_digits(inn, [7, 2, 4, 10, 3, 5, 9, 4, 6, 8])
-            n12 = check_digits(inn, [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8])
-            if n11 == int(inn[10]) and n12 == int(inn[11]):
+            inn11 = check_digits(inn, [7, 2, 4, 10, 3, 5, 9, 4, 6, 8])
+            inn12 = check_digits(inn, [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8])
+            if inn11 == int(inn[10]) and inn12 == int(inn[11]):
                 result = True
         if not result:
             print('Неправильное контрольное число')
@@ -72,4 +71,32 @@ def validationCardNumber(number):
         # raise ValidationError('Номер карты указан не верно')
     return result
 
-validationCardNumber(number)
+
+def validateRs(bik, rs):
+    result = False
+    if not rs:
+        # raise ValidationError('Расчетный счет не заполнен')
+        print('Расчетный счет не заполнен')
+    elif not rs.isdigit():
+        print('Расчетный счет может состоять только из цифры')
+        # raise ValidationError('Расчетный счет может состоять только из цифры')
+    elif not len(rs) == 20:
+        print('Расчетный счет может состоять только из 20 цифр')
+        # raise ValidationError('Расчетный счет может состоять только из 20 цифр')
+    else:
+        bank_rs = bik[-3::] + rs
+        checksum = 0
+        check_digits = [7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1]
+        for idx, digit in enumerate(check_digits):
+            checksum += digit * (int(bank_rs[idx]) % 10)
+
+        if checksum % 10 == 0:
+            result = True
+            print('Верно')
+        else:
+            print('Неправильное контрольное число')
+            # raise ValidationError('Расчетный счет не соответствует БИКу банка')
+    return result
+
+
+validateRs(bik, rs)
