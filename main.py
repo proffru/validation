@@ -18,7 +18,6 @@ def validateBik(bik):
 
 def check_digits(inn, coefficients):
     n = 0
-    # for i in list(coefficients):
     for idx, i in enumerate(coefficients):
         n += i * int(inn[idx])
     return n % 11 % 10
@@ -50,19 +49,27 @@ def validateInn(inn):
             # raise ValidationError('ИНН указан не верно')
     return result
 
+
 def validationCardNumber(number):
-    odd_digits = int(number[-1::-2])
+    result = False
+    odd_digits = number[-1::-2]
     even_digits = number[-2::-2]
-    checksum = 0
-    print(odd_digits)
+    total = 0
 
-    checksum += sum(odd_digits)
-    for even in even_digits:
-        duble_enent_digits = even*2
-        if duble_enent_digits > 9:
-            duble_enent_digits -= 9
-        checksum += duble_enent_digits
-    return print(checksum)
+    total += sum(map(int, str(odd_digits)))
 
-number = '5599005081769122'
+    for digit in even_digits:
+        digit = int(digit)
+        if (digit * 2) > 9:
+            total += ((digit * 2) - 9)
+        else:
+            total += (digit * 2)
+    if (total % 10) == 0:
+        result = True
+        print('valid')
+    else:
+        print('Номер карты указан не верно')
+        # raise ValidationError('Номер карты указан не верно')
+    return result
+
 validationCardNumber(number)
